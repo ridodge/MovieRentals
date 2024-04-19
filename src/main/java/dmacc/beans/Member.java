@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 
@@ -47,10 +48,10 @@ public class Member {
 		this.memberSince = memberSince;
 	}
 
-	public Member(Long id, String name, LocalDate memberSince) {
+	public Member(Long id, String name, String memberSince) {
 		this.id = id;
 		this.name = name;
-		this.memberSince = memberSince;
+		this.memberSince = LocalDate.parse(memberSince, DateTimeFormatter.ISO_DATE);
 	}
 
 	public Member() {

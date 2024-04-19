@@ -1,0 +1,41 @@
+@charset "ISO-8859-1";
+    header {
+        background-color: rgb(247, 0, 255);
+        width: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        left: 0;
+        align-items: center;
+        justify-content: center;
+    }
+    body{
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(237, 200, 255);
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+    tr, th, td, table {
+        border: 1px black solid;
+    }
+
+    .overdue {
+        color: red;
+    }
+    .buttons {
+        height: 100px;
+        width: 100px;
+    }
+    .column {
+        display: flex;
+        flex-direction: column;
+    }
+    .row {
+        display: flex;
+        flex-direction: row;
+    }
+    .nav-buttons{
+        margin: 5px;
+    }

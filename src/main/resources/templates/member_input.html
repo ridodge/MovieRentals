@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Add Member</title>
+</head>
+<body>
+	<form th:object="${newMember}"
+		th:action="@{/addNewMember}"
+		method=POST onsubmit="">
+		<p>Member Name:</p>
+		<input name="movieName" size="20" th:field="*{name}"> <br />
+		<p>Member ID: </p><input name="movieId" size="10" th:field="*{id}"><br />
+		<p>Member Since: </p><input name="memberSince" size="20" th:field="*{memberSince}"><br />
+			<input name="submit" type="submit" value="submit" />
+	</form>
+</body>
+</html>

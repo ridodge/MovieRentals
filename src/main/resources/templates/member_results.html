@@ -1,0 +1,20 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>View All Members</title>
+</head>
+<body>
+	<form>
+		<table>
+			<tr th:each="currentMember : ${members}">
+				<td th:text="${currentMember.name}" />
+				<td th:text="${currentMember.id}" />
+				<td th:text="${currentMember.memberSince}" />
+				<td><a th:href="@{/editMember/{id}(id=${currentMember.id})}">Edit</a></td>
+				<td><a th:href="@{/deleteMember/{id}(id=${currentMember.id})}">Delete</a></td>
+			</tr>
+		</table>
+	</form>
+	<a href="../addNewMember">Add a new Member</a>
+</body>
+</html>

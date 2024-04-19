@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Movies</title>
+</head>
+<body>
+	<form th:object="${newMovie}"
+		th:action="@{/addNewMovie}"
+		method=POST onsubmit="">
+		<h3>Movie Name:</h3>
+		<input name="movieName" size="20" th:field="*{movieName}"> <br />
+		Movie Group ID: <input name="movieId" size="10" th:field="*{movieId}"><br />
+		Unique Movie ID: <input name="uniqueCheckoutId" size="20"
+			th:field="*{uniqueCheckoutId}"><br /> <input name="submit"
+			type="submit" value="submit" />
+	</form>
+</body>
+</html>
