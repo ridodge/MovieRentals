@@ -7,6 +7,7 @@
 package dmacc.beans;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,28 +25,40 @@ import dmacc.beans.Movie;
 @Entity
 public class CheckedOutMovies {
 	@Id
+	@GeneratedValue
 	private Long ID;
 	@OneToOne
 	private Member member;
 	@OneToOne
 	private Movie movie;
 	private LocalDate checkoutDate;
+	private LocalDate checkinDate;
 	
 
-	public CheckedOutMovies(Long iD, Member member, Movie movie, LocalDate date) {
-		ID = iD;
+	public CheckedOutMovies(Member member, Movie movie, String checkoutDate) {
 		this.member = member;
 		this.movie = movie;
-		this.checkoutDate = date;
+		this.checkoutDate = LocalDate.parse(checkoutDate, DateTimeFormatter.ISO_DATE);
+		this.checkinDate = this.checkoutDate.plusWeeks(2);
 	}
 
 
-	public LocalDate getDate() {
+	public LocalDate getCheckinDate() {
+		return checkinDate;
+	}
+
+
+	public void setCheckinDate(LocalDate checkinDate) {
+		this.checkinDate = checkinDate;
+	}
+
+
+	public LocalDate getCheckoutDate() {
 		return checkoutDate;
 	}
 
 
-	public void setDate(LocalDate date) {
+	public void setCheckoutDate(LocalDate date) {
 		this.checkoutDate = date;
 	}
 

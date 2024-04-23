@@ -1,0 +1,25 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>View All Movies</title>
+</head>
+<body>
+	<form>
+		<table>
+			<tr th:each="currentCheckOut : ${checkedOut}" id="overdueTable">
+				<td th:text="${currentCheckOut.Movie.movieName}" />
+				<td th:text="${currentCheckOut.Movie.uniqueCheckoutId}" />
+				<td th:text="${currentCheckOut.Member.Id}" />
+				<td th:text="${currentCheckOut.checkoutDate}" />
+				<td th:text="${currentCheckOut.checkoutDate}" />
+				<td style="color:red;" th:text="${currentCheckOut.checkinDate}" />
+			</tr>
+		</table>
+	</form>
+	<a href="../addNewMovie">Add a new Movie</a>
+	
+	
+	<script>
+	</script>
+</body>
+</html>

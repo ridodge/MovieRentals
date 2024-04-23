@@ -1,0 +1,13 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Check In Movie</title>
+</head>
+<body>
+	<form th:action="@{/checkin}" method="POST">
+		Enter Movie ID: <input name="movieId">
+		</form>
+		
+	<a href="../addNewMember">Add a new Member</a>
+</body>
+</html>

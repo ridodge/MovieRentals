@@ -1,0 +1,21 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Checkout</title>
+</head>
+<body>
+	<form th:action="@{/checkout}" method="POST">
+		<select th:name="members">
+			<option  th:each="currentMember : ${members}" th:value="${currentMember.id}" th:text="${currentMember.id + ' ' + currentMember.name}"/>
+		</select>
+		
+		<select th:name="movies" >
+			<option th:each="currentMovie : ${movies}" th:value="${currentMovie.uniqueCheckoutId}" th:text="${currentMovie.uniqueCheckoutId + ' ' + currentMovie.movieName}"/>
+		</select>
+		<input name="checkoutDate" size="20">
+		<button type="submit">Submit</button>
+		</form>
+		
+	<a href="../addNewMember">Add a new Member</a>
+</body>
+</html>

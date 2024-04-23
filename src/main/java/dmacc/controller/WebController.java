@@ -6,13 +6,19 @@
 
 package dmacc.controller;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import dmacc.beans.CheckedOutMovies;
 import dmacc.beans.Movie;
@@ -30,6 +36,8 @@ public class WebController {
 	MovieRepository movieRepo;
 	@Autowired
 	MemberRepository memberRepo;
+	
+	Sort sortByDate = Sort.by(Sort.Direction.DESC, "checkoutDate");
 
 	@GetMapping({ "/viewAllMovies" })
 	public String viewAllMovies(Model model) {
@@ -42,6 +50,7 @@ public class WebController {
 		catch(NullPointerException npe){
 			return addNewMovie(model);
 		}
+		
 		model.addAttribute("movies", movieRepo.findAll());
 		return "movie_results";
 	}
@@ -126,4 +135,52 @@ public class WebController {
 		memberRepo.delete(m);
 		return viewAllMembers(model);
 	}
+	
+	@GetMapping("/checkout")
+	public String checkout(Model model) {
+		if (movieRepo.findAll() != null && memberRepo.findAll() != null) {
+			model.addAttribute("members", memberRepo.findAll());
+			model.addAttribute("movies", movieRepo.findAll());
+		}
+		CheckedOutMovies chm = new CheckedOutMovies();
+		model.addAttribute("checkedOutMovie", chm);
+		return "checkout";
+	}
+	
+	@GetMapping("/checkin")
+	public String checkout() {
+		return "checkin";
+	}
+	
+	@PostMapping("/checkout")
+	public String checkout(@RequestParam("movies") String movieID, @RequestParam("members") String memberID, @RequestParam("checkoutDate") String inputDate, Model model) {
+		Movie movie = movieRepo.findById(Long.parseLong(movieID)).get();
+		Member member = memberRepo.findById(Long.parseLong(memberID)).get();
+		CheckedOutMovies chm = new CheckedOutMovies(member, movie, inputDate);
+		checkedOutRepo.save(chm);
+		return "index";
+	}
+	
+	
+	@PostMapping("/checkin")
+	public String checkIn(@RequestParam("movieId") String movieID, Model model) {
+		Movie searchMovie = movieRepo.findById(Long.parseLong(movieID)).get();
+		CheckedOutMovies checkIn = checkedOutRepo.findByMovie(searchMovie).get(0);
+		checkedOutRepo.delete(checkIn);
+		model.addAttribute("movie", searchMovie);
+		return "checkinsuccessful";
+	}
+	
+
+	@GetMapping("/overdue")
+	public String checkedOut(Model model) {
+		if (checkedOutRepo.findAll(sortByDate) != null) {
+			model.addAttribute("checkedOut", checkedOutRepo.findByCheckoutDateLessThan(LocalDate.now()));
+			System.out.println();
+			System.out.println(123);
+			return "overdue";
+		}
+		return "index";
+	}
+	
 }
