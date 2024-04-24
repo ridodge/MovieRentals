@@ -71,14 +71,14 @@ public class WebController {
 	@PostMapping("/updateMovie/{id}")
 	public String reviseMovie(Movie m, Model model) {
 		movieRepo.save(m);
-		return viewAllMovies(model);
+		return "movie_results";
 	}
 	
 	@GetMapping("/editMovie/{id}")
 	public String showUpdateStringMovie(@PathVariable("id") long id, Model model) {
 		Movie m = movieRepo.findById(id).orElse(null);
 		model.addAttribute("newMovie", m);
-		return "movie_input";
+		return viewAllMovies(model);
 	}
 	
 	@GetMapping("/deleteMovie/{id}")
@@ -119,7 +119,7 @@ public class WebController {
 	@PostMapping("/updateMember/{id}")
 	public String reviseMember(Member m, Model model) {
 		memberRepo.save(m);
-		return viewAllMembers(model);
+		return "member_results";
 	}
 	
 	@GetMapping("/editMember/{id}")
@@ -133,7 +133,7 @@ public class WebController {
 	public String deleteMember(@PathVariable("id") long id, Model model) {
 		Member m = memberRepo.findById(id).orElse(null);
 		memberRepo.delete(m);
-		return viewAllMembers(model);
+		return "member_results";
 	}
 	
 	@GetMapping("/checkout")
@@ -173,14 +173,21 @@ public class WebController {
 	
 
 	@GetMapping("/overdue")
-	public String checkedOut(Model model) {
+	public String overdueMovies(Model model) {
 		if (checkedOutRepo.findAll(sortByDate) != null) {
 			model.addAttribute("checkedOut", checkedOutRepo.findByCheckoutDateLessThan(LocalDate.now()));
-			System.out.println();
-			System.out.println(123);
 			return "overdue";
 		}
 		return "index";
 	}
 	
+	
+	@GetMapping("/checkedoutmovies")
+	public String checkedOut(Model model) {
+		if (checkedOutRepo.findAll(sortByDate) != null) {
+			model.addAttribute("checkedOut", checkedOutRepo.findAll());
+			return "checkedoutmovies";
+		}
+		return "index";
+	}
 }

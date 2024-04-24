@@ -2,8 +2,15 @@
 <head>
 <meta charset="UTF-8">
 <title>Checkout</title>
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="column">
+<header class="column">
+    <h1>Des Moines Video Rental</h1>
+    <p>123 NW 1234th Ave<br>
+    Des Moines, IA 50319<br>
+    +1 (515)-123-1234</p>
+</header>
 	<form th:action="@{/checkout}" method="POST">
 		<select th:name="members">
 			<option  th:each="currentMember : ${members}" th:value="${currentMember.id}" th:text="${currentMember.id + ' ' + currentMember.name}"/>
@@ -12,10 +19,16 @@
 		<select th:name="movies" >
 			<option th:each="currentMovie : ${movies}" th:value="${currentMovie.uniqueCheckoutId}" th:text="${currentMovie.uniqueCheckoutId + ' ' + currentMovie.movieName}"/>
 		</select>
-		<input name="checkoutDate" size="20">
+		<input type="date" name="checkoutDate" size="20">
 		<button type="submit">Submit</button>
 		</form>
 		
-	<a href="../addNewMember">Add a new Member</a>
+<div class="row">
+<button class="column nav-buttons" onclick="document.location='/viewAllMovies'"><img src="/images/movie_img.png" class="buttons" >Manage Movies</button>
+<button class="column nav-buttons" onclick="document.location='/checkout'"><img src="/images/movie_img.png" class="buttons">Checkout</button>
+<button class="column nav-buttons" onclick="document.location='/checkin'"><img src="/images/movie_img.png" class="buttons">Check In</button>
+<button class="column nav-buttons" onclick="document.location='/viewAllMembers'"><img src="/images/person_img.png" class="buttons">Manage Members</button>
+<button class="column nav-buttons" onclick="document.location='/viewAllMembers'"><img src="/images/question_mark.png" class="buttons">Reports</button>
+</div>
 </body>
 </html>
