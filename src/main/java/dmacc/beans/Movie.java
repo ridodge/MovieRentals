@@ -21,7 +21,7 @@ public class Movie {
 	@Id
 	private Long uniqueCheckoutId;// each movie gets a different id
 	private String movieName;
-	private int movieId; // movies of the same title share this ID
+	private Long movieId; // movies of the same title share this ID
 
 	public Long getUniqueCheckoutId() {
 		return uniqueCheckoutId;
@@ -39,15 +39,15 @@ public class Movie {
 		this.movieName = movieName;
 	}
 
-	public int getMovieId() {
+	public Long getMovieId() {
 		return movieId;
 	}
 
-	public void setMovieId(int movieId) {
+	public void setMovieId(Long movieId) {
 		this.movieId = movieId;
 	}
 
-	public Movie(Long uniqueCheckoutId, String movieName, int movieId) {
+	public Movie(Long uniqueCheckoutId, String movieName, Long movieId) {
 		this.uniqueCheckoutId = uniqueCheckoutId;
 		this.movieName = movieName;
 		this.movieId = movieId;

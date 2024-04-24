@@ -22,11 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import dmacc.beans.CheckedOutMovies;
 import dmacc.beans.Movie;
+import dmacc.beans.MovieInventory;
 import dmacc.beans.Member;
 
 import dmacc.repository.CheckedOutMoviesRepository;
 import dmacc.repository.MovieRepository;
 import dmacc.repository.MemberRepository;
+import dmacc.repository.MovieInventoryRepository;
 
 @Controller
 public class WebController {
@@ -36,6 +38,8 @@ public class WebController {
 	MovieRepository movieRepo;
 	@Autowired
 	MemberRepository memberRepo;
+	@Autowired
+	MovieInventoryRepository movieInventoryRepo;
 	
 	Sort sortByDate = Sort.by(Sort.Direction.DESC, "checkoutDate");
 
@@ -59,12 +63,19 @@ public class WebController {
 	public String addNewMovie(Model model) {
 		Movie m = new Movie();
 		model.addAttribute("newMovie", m);
+
 		return "movie_input";
 	}
 
 	@PostMapping("/addNewMovie")
 	public String addNewMovie(@ModelAttribute Movie m, Model model) {
 		movieRepo.save(m);
+		if (movieInventoryRepo.findById(m.getMovieId()).orElse(null) != null) {
+			addInventory(m.getMovieId());
+		} else {
+			MovieInventory mi = new MovieInventory(m.getMovieId(), 1, 1, m.getMovieName());
+			movieInventoryRepo.save(mi);
+		}
 		return viewAllMovies(model);
 	}
 
@@ -85,6 +96,14 @@ public class WebController {
 	public String deleteMovie(@PathVariable("id") long id, Model model) {
 		Movie m = movieRepo.findById(id).orElse(null);
 		movieRepo.delete(m);
+		MovieInventory inventory = movieInventoryRepo.findById(m.getMovieId()).orElse(null);
+		if (inventory != null) {
+			subtractInventory(m.getMovieId());
+			inventory = movieInventoryRepo.findById(m.getMovieId()).orElse(null);
+			if (inventory.getInventory() == 0) {
+				movieInventoryRepo.delete(inventory);
+			}
+		}
 		return viewAllMovies(model);
 	}
 	
@@ -158,6 +177,9 @@ public class WebController {
 		Member member = memberRepo.findById(Long.parseLong(memberID)).get();
 		CheckedOutMovies chm = new CheckedOutMovies(member, movie, inputDate);
 		checkedOutRepo.save(chm);
+		if (movieInventoryRepo.findById(movie.getMovieId()).orElse(null) != null) {
+			subtractStock(movie.getMovieId());
+		}
 		return "index";
 	}
 	
@@ -168,6 +190,9 @@ public class WebController {
 		CheckedOutMovies checkIn = checkedOutRepo.findByMovie(searchMovie).get(0);
 		checkedOutRepo.delete(checkIn);
 		model.addAttribute("movie", searchMovie);
+		if (movieInventoryRepo.findById(searchMovie.getMovieId()).orElse(null) != null) {
+			addStock(searchMovie.getMovieId());
+		}
 		return "checkinsuccessful";
 	}
 	
@@ -189,5 +214,40 @@ public class WebController {
 			return "checkedoutmovies";
 		}
 		return "index";
+	}
+	
+	@GetMapping("/currentinventory")
+	public String inventory(Model model) {
+		if (movieInventoryRepo.findAll() != null) {
+			model.addAttribute("currentInventory", movieInventoryRepo.findAll());
+			return "currentinventory";
+		}
+		return "index";
+	}
+	
+	public void addInventory(Long movieID) {
+		MovieInventory mi = movieInventoryRepo.findById(movieID).get();
+		mi.setInventory(mi.getInventory() + 1);
+		mi.setInStock(mi.getInStock() + 1);
+		movieInventoryRepo.save(mi);
+	}
+	
+	public void subtractInventory(Long movieID) {
+		MovieInventory mi = movieInventoryRepo.findById(movieID).get();
+		mi.setInventory(mi.getInventory() - 1);
+		mi.setInStock(mi.getInStock() - 1);
+		movieInventoryRepo.save(mi);
+	}
+	
+	public void addStock(Long movieID) {
+		MovieInventory mi = movieInventoryRepo.findById(movieID).get();
+		mi.setInStock(mi.getInStock() + 1);
+		movieInventoryRepo.save(mi);
+	}
+	
+	public void subtractStock(Long movieID) {
+		MovieInventory mi = movieInventoryRepo.findById(movieID).get();
+		mi.setInStock(mi.getInStock() - 1);
+		movieInventoryRepo.save(mi);
 	}
 }

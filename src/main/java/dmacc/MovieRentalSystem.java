@@ -21,6 +21,7 @@ import dmacc.beans.Movie;
 import dmacc.beans.CheckedOutMovies;
 import dmacc.repository.CheckedOutMoviesRepository;
 import dmacc.repository.MemberRepository;
+import dmacc.repository.MovieInventoryRepository;
 import dmacc.repository.MovieRepository;
 
 @SpringBootApplication
@@ -35,4 +36,6 @@ public class MovieRentalSystem {
 	MovieRepository movieRepo;
 	@Autowired
 	MemberRepository memberRepo;
+	@Autowired
+	MovieInventoryRepository movieInventoryRepo;
 }
