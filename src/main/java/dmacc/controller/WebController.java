@@ -200,7 +200,7 @@ public class WebController {
 	@GetMapping("/overdue")
 	public String overdueMovies(Model model) {
 		if (checkedOutRepo.findAll(sortByDate) != null) {
-			model.addAttribute("checkedOut", checkedOutRepo.findByCheckoutDateLessThan(LocalDate.now()));
+			model.addAttribute("checkedOut", checkedOutRepo.findByCheckoutDateLessThan(LocalDate.now().minusDays(14)));
 			return "overdue";
 		}
 		return "index";
